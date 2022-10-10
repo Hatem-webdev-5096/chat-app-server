@@ -152,11 +152,13 @@ exports.postSignin = async (req, res, next) => {
           process.env.JWT_SECRET,
           { algorithm: "HS256" }
         );
-          console.log(token);
         res
           .status(200)
           .cookie("authCookie", token, {
             httpOnly: true,
+            sameSite: "none",
+            secure: true,
+    
           })
           .json({
             message: "Login successful.",
