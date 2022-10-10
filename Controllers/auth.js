@@ -62,7 +62,7 @@ exports.postSignup = async (req, res, next) => {
         subject: "Chat-App register instructions.",
         html: `
                 <h1>Chat-App: confirm email address</h1>
-                <p>please follow the following <a href="http://localhost:3000/confirm-email/${token}"> link </a>
+                <p>please follow the following <a href="https://chat-app-362017.web.app/confirm-email/${token}"> link </a>
                  to activate your account.</p>
                  <p> This email is only valid for 1 hour. </p>
             `,
@@ -330,7 +330,7 @@ exports["forgot-password"] = async (req, res, next) => {
         subject: "Chat-App reset password.",
         html: `
                 <h1>Chat-App: Reset password</h1>
-                <p>please follow the following <a href="http://localhost:3000/reset-password/${token}"> link </a>
+                <p>please follow the following <a href="https://chat-app-362017.web.app/reset-password/${token}"> link </a>
                  to change your password.</p>
                 <p> This email is only valid for 1 hour. </p> 
             `,

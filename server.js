@@ -28,7 +28,7 @@ const storage = multer.diskStorage({
 
 
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: 'https://chat-app-362017.web.app/',
   methods: 'GET,POST,PUT,PATCH,DELETE',
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -86,7 +86,7 @@ mongoose
     });
     const io = new Server(server, {
       cors: {
-        origin: "http://localhost:3000",
+        origin: "https://chat-app-362017.web.app/",
         methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
         credentials:true
       },
