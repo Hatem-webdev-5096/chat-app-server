@@ -50,7 +50,14 @@ app.use((req, res, next) => {
 
 app.get("/csrf", (req,res,next) => { 
   res.status(200).cookie('xsrf-token', req.csrfToken(),{httpOnly:true}).json({csrfToken:req.csrfToken()});
-})
+  next();
+});
+
+app.use( (req, res, next)=> {
+  var token = req.csrfToken();
+  res.cookie('XSRF-TOKEN', token);
+  next();
+});
 
 app.use("/auth", authRoutes);
 app.use("/account", accountRoutes);

@@ -76,9 +76,15 @@ exports.getFriendsList = async (req, res, next) => {
     });
     await user.save();
     let friendsList = [];
+    const userChats = user.chats;
 
     if (user.friends.length > 0) {
       const friends = user.friends.map((f) => {
+
+        const correspondingChat = user.chats.findIndex((c) => {
+          return c.friend.userId.toString() === f.friendUserId.toString();
+        });
+
 
         let fObject = f.friendUserId;
 
@@ -98,6 +104,7 @@ exports.getFriendsList = async (req, res, next) => {
           userName: fObject.userName,
           imageUrl: fObject.imageUrl,
           _id: fObject._id,
+          correspondingChatHasUnreadMessages: correspondingChat.hasUnreadMessages
         };
       });
       user.chats.forEach((c) => {
@@ -153,8 +160,7 @@ exports.getNotifications = async (req, res, next) => {
     const friendRequests = user.friendRequests.recieved.map((r) => {
       let fObject = r.sender;
       if (
-        r.sender.googleProfilePic &&
-        r.sender.profilePic.isDefault === false
+        r.sender.googleProfilePic
       ) {
         fObject.imageUrl = r.sender.googleProfilePic;
       } else if (!r.sender.googleProfilePic) {
@@ -263,7 +269,8 @@ exports.getChat = async (req, res, next) => {
     const chat = user.chats.find((c) => {
       return c._id.toString() === chatId.toString();
     });
-
+    user.chats[user.chats.indexOf(chat)].hasUnreadMessages = false;
+    await user.save();
     res.status(200).json({ chat: chat });
   } catch (error) {
     next(error);

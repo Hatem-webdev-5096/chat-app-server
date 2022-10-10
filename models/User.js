@@ -79,8 +79,15 @@ const userSchema = new Schema({
           messageContent: {
             type: String,
           },
+          time: {
+            month: Number,
+            day: Number,
+            hour: Number,
+            minutes:Number,
+          },
         },
       ],
+      hasUnreadMessages: Boolean
     },
   ],
   friendRequests: {

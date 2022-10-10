@@ -58,7 +58,8 @@ exports.socketConnection = (io) => {
         senderUser.chats[senderUserTargetChat].messages.push({
           senderUserName: senderUser.userName,
           messageContent: messageObject.message,
-          time: messageObject.time
+          time: messageObject.time,
+          
         });
         await senderUser.save();
         const recieverUserTargetChat = recieverUser.chats.findIndex((c) => {
@@ -68,8 +69,9 @@ exports.socketConnection = (io) => {
         recieverUser.chats[recieverUserTargetChat].messages.push({
           senderUserName: senderUser.userName,
           messageContent: messageObject.message,
-          time: messageObject.time
+          time: messageObject.time,
         });
+        recieverUser.chats[recieverUserTargetChat].hasUnreadMessages = true;
         await recieverUser.save();
         const recieverSocket = connectedUsers.find((u) => {
           return u.userId.toString() === recieverUser._id.toString();
@@ -78,6 +80,7 @@ exports.socketConnection = (io) => {
         if (recieverSocket) {
           
           socket.broadcast.to(recieverSocket.socketId).emit("messageRecieved", {
+            chatId: recieverUserTargetChat._id,
             senderUserName: senderUser.userName,
             messageContent: messageObject.message,
             time: messageObject.time
@@ -87,25 +90,6 @@ exports.socketConnection = (io) => {
       } catch (error) {}
     });
 
-    socket.on("updatePP", async(userId) => {
-     
-      try {
-        const user = await User.findById(userId);
-        
-        const userSocket = connectedUsers.find((u) => {
-          return u.userId.toString() === userId.toString();
-        });
-        console.log(userSocket, connectedUsers);
-        socket.broadcast.to(userSocket.socketId).emit("renderUpdatedPP", {
-          profilePic: {
-            contentType: user.profilePic.contentType,
-            data: user.profilePic.data.toString("base64"),
-          }
-        })
-      } catch (error) {
-        console.log(error);
-      }
-    })
 
     socket.on("disconnect", () => {
       
