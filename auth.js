@@ -12,7 +12,7 @@ const authMiddleware = (req,res,next) => {
     } else {
         const error = new Error('Not Authenticated');
         error.status = 403;
-        error.data = {message:'session expired, please signin.', status: 403}
+        error.data = {message:'Authentication failed.', status: 403}
         next(error);
     }
 

@@ -249,7 +249,7 @@ exports.postGoogleSignin = async (req, res, next) => {
               isDefault: false,
             },
             _id: newUser._id,
-            sessionExp: new Date().getTime() + 60 * 60 * 1000,
+           
           },
         });
     } else if (userExists) {
@@ -284,7 +284,7 @@ exports.postGoogleSignin = async (req, res, next) => {
               isDefault: userExists.profilePic?.isDefault,
             },
             _id: userExists._id,
-            sessionExp: new Date().getTime() + 60 * 60 * 1000,
+            
           },
         });
     }
