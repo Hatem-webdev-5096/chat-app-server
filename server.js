@@ -8,6 +8,7 @@ const socket = require("./socket");
 const cookie = require('cookie-parser');
 const multer = require('multer');
 const Tokens = require('csrf');
+
 const tokens = new Tokens();
 const csrfSecret = tokens.secretSync();
 
@@ -48,7 +49,7 @@ app.use((req, res, next) => {
 
 app.get("/csrf",(req,res,next) => {
     
-    const token = Tokens.create(csrfSecret);
+    const token = tokens.create(csrfSecret);
     res.status(200).json({csrfToken:token});
     next();
 });
