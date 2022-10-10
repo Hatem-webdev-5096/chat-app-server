@@ -8,7 +8,8 @@ const socket = require("./socket");
 const cookie = require('cookie-parser');
 const multer = require('multer');
 const Tokens = require('csrf');
-const csrfSecret = Tokens.secretSync();
+const tokens = new Tokens();
+const csrfSecret = tokens.secretSync();
 
 const authRoutes = require("./routes/auth");
 const accountRoutes = require("./routes/account");
@@ -54,7 +55,7 @@ app.get("/csrf",(req,res,next) => {
 
 app.post( (req, res, next)=> {
   let token = req.body._csrf;
-  if(!csrf.verify(csrfSecret,token)) {
+  if(!tokens.verify(csrfSecret,token)) {
     const error = new Error("Invalid csrf Token");
     error.status = 403;
     error.data= {message: "invalid csrf token"};
