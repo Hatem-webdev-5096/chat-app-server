@@ -156,7 +156,6 @@ exports.postSignin = async (req, res, next) => {
         res
           .status(200)
           .cookie("authCookie", token, {
-            maxAge: 60 * 60 * 1000,
             httpOnly: true,
           })
           .json({
@@ -175,7 +174,7 @@ exports.postSignin = async (req, res, next) => {
                 isDefault: user.profilePic.isDefault,
               },
               _id: user._id,
-              sessionExp: new Date().getTime() + 60 * 60 * 1000,
+              
             },
           });
       }
