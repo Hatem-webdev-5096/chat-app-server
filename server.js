@@ -7,8 +7,8 @@ const bodyParser = require("body-parser");
 const socket = require("./socket");
 const cookie = require('cookie-parser');
 const multer = require('multer');
-const csrf = require('csrf');
-const csrfSecret = csrf.secretSync();
+const Tokens = require('csrf');
+const csrfSecret = Tokens.secretSync();
 
 const authRoutes = require("./routes/auth");
 const accountRoutes = require("./routes/account");
@@ -47,7 +47,7 @@ app.use((req, res, next) => {
 
 app.get("/csrf",(req,res,next) => {
     
-    const token = csrf.create(csrfSecret);
+    const token = Tokens.create(csrfSecret);
     res.status(200).json({csrfToken:token});
     next();
 });
