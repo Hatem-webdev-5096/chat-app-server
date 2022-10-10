@@ -7,8 +7,8 @@ const bodyParser = require("body-parser");
 const socket = require("./socket");
 const cookie = require('cookie-parser');
 const multer = require('multer');
-const csrf = require('csurf');
-
+const csrf = require('csrf');
+const csrfSecret = csrf.secretSync();
 
 const authRoutes = require("./routes/auth");
 const accountRoutes = require("./routes/account");
@@ -35,9 +35,6 @@ app.use(cors({
 app.use(cookie(process.env.COOKIE_PARSER_SECRET));
 app.use(bodyParser.json());
 app.use(multer({storage}).single('image'));
-app.use(csrf({cookie:{
-  httpOnly:true
-}}));
 
 
 
@@ -48,15 +45,23 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get("/csrf", (req,res,next) => { 
-  res.status(200).cookie('xsrf-token', req.csrfToken(),{httpOnly:true, sameSite:none}).json({csrfToken:req.csrfToken()});
-  next();
+app.get("/csrf",(req,res,next) => {
+    
+    const token = csrf.create(csrfSecret);
+    res.status(200).json({csrfToken:token});
+    next();
 });
 
-app.use( (req, res, next)=> {
-  var token = req.csrfToken();
-  res.cookie('XSRF-TOKEN', token, {httpOnly:true, sameSite:none});
-  next();
+app.post( (req, res, next)=> {
+  let token = req.body._csrf;
+  if(!csrf.verify(csrfSecret,token)) {
+    const error = new Error("Invalid csrf Token");
+    error.status = 403;
+    error.data= {message: "invalid csrf token"};
+    throw error;
+  } else {
+     next();
+  }
 });
 
 app.use("/auth", authRoutes);
